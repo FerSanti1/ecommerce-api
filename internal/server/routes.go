@@ -3,13 +3,13 @@ package server
 import (
 	"net/http"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
 	e := echo.New()
-	e.Use(middleware.Logger())
+	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Recover())
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -27,7 +27,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	return e
 }
 
-func (s *Server) HelloWorldHandler(c echo.Context) error {
+func (s *Server) HelloWorldHandler(c *echo.Context) error {
 	resp := map[string]string{
 		"message": "Hello World",
 	}
@@ -35,6 +35,6 @@ func (s *Server) HelloWorldHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, resp)
 }
 
-func (s *Server) healthHandler(c echo.Context) error {
+func (s *Server) healthHandler(c *echo.Context) error {
 	return c.JSON(http.StatusOK, s.db.Health())
 }
